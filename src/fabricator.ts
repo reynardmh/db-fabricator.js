@@ -1,13 +1,13 @@
 import * as Promise from 'bluebird';
 import { DataStoreAdaptor } from './data-store-adaptor';
 
-interface FabricatorTemplateArg {
+export interface FabricatorTemplateArg {
   name: string,
   from?: string,
   attr: Object
 }
 
-interface DataToFabricate {
+export interface DataToFabricate {
   tableName: string,
   attr: Object
 }
@@ -84,7 +84,7 @@ class Fabricator {
     }
   }
 
-  static clearTemplate() {
+  static clearTemplate(): void {
     this._data = {};
   }
 }
