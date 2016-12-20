@@ -6,7 +6,7 @@ Convenient way to populate your database, mainly for setting up e2e testing data
 
 Define template for each of the data type (table if you are using relational DB).
 
-```
+```typescript
 Fabricator.template({
   name: 'organization',
   attr: {
@@ -33,14 +33,14 @@ Fabricator.template({
 
 Conveniently populate data from the template
 
-```
+```typescript
 Fabricator.fabricate('user', { firstName: 'Bob' }); // Department and organization will be automatically created for the user
 Fabricator.fabricate('user', { firstName: 'Jon' }); // Jon will have different department and organization
 ```
 
 If you want to use the same department/organization for some users:
 
-```
+```typescript
 Fabricator.fabricate('organization')
 .then((org) => {
   Fabricator.fabricate('department', { name: 'IT', organizationId: org.id })
@@ -62,7 +62,7 @@ Currently Fabricator.js supports MySQL data store, but you can create an adaptor
 Just implement a class that implements the `DataStoreAdaptor` interface. For an example, see the
 `MySQLAdaptor` implementation.
 
-```
+```typescript
 export interface DataStoreAdaptor {
   createData(tableName: string, finalAttr: Object): Promise<any>;
 }
