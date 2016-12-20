@@ -137,17 +137,3 @@ describe('fabricator', () => {
   });
 });
 
-
-Fabricator.fabricate('organization')
-.then((org) => {
-  Fabricator.fabricate('department', { name: 'IT', organizationId: org.id })
-  .then((dept) => {
-    Fabricator.fabricate('user', { firstName: 'Bob', departmentId: dept.id });
-    Fabricator.fabricate('user', { firstName: 'Jane', departmentId: dept.id });
-  })
-  Fabricator.fabricate('department', { name: 'Marketing', organizationId: org.id })
-  .then((dept) => {
-    Fabricator.fabricate('user', { firstName: 'Jon', departmentId: dept.id });
-    Fabricator.fabricate('user', { firstName: 'Mary', departmentId: dept.id });
-  })
-});
