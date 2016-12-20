@@ -2,11 +2,34 @@
 
 Convenient way to populate your database, mainly for setting up e2e testing data.
 
+## Install
+
+```
+$ npm install db-fabricator
+```
+
 ## Usage
+
+Setup
+
+```
+import { Fabricator, MySQLAdaptor } from 'db-fabricator';
+import * as mysql from 'mysql';
+
+let conn = mysql.createConnection({
+  host: 'localhost',
+  user: 'dev',
+  password: 'pass',
+  database: 'dbname'
+});
+
+Fabricator.setAdaptor(new MySQLAdaptor({conn: conn}));
+```
 
 Define template for each of the data type (table if you are using relational DB).
 
 ```typescript
+
 Fabricator.template({
   name: 'organization',
   attr: {
@@ -69,6 +92,14 @@ export interface DataStoreAdaptor {
 ```
 
 ### Running Test
+
+Install ts-node to run the test without compiling to js first.
+
+```
+$ npm install -g ts-node
+```
+
+Run the main test
 
 ```
 $ mocha --compilers ts:ts-node/register,tsx:ts-node/register test/fabricator.spec.ts
