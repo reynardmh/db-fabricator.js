@@ -117,6 +117,20 @@ describe('fabricator', () => {
           departmentId: () => Fabricator.fabricate('department')
         }
       });
+      Fabricator.template({
+        name: 'user-fulltime',
+        from: 'user',
+        attr: {
+          type: 'fulltime'
+        }
+      });
+      Fabricator.template({
+        name: 'user-fulltime-US',
+        from: 'user-fulltime',
+        attr: {
+          country: 'US'
+        }
+      });
     });
     after(() => {
       Fabricator.clearTemplate();
@@ -130,6 +144,20 @@ describe('fabricator', () => {
         let org  = <any>DB.find('organization', dept.organizationId);
         expect(dept.name).to.equal('IT');
         expect(org.name).to.equal('Fabricator Inc');
+        done();
+      });
+    });
+
+    it('create using nested templates', (done) => {
+      Promise.all([
+          Fabricator.fabricate('user-fulltime', { firstName: 'Tom' }),
+          Fabricator.fabricate('user-fulltime-US', { firstName: 'Matt' })
+      ]).spread((user1: any, user2: any) => {
+        expect(user1.type).to.equal('fulltime');
+        expect(user2.type).to.equal('fulltime');
+        expect(user1.firstName).to.equal('Tom');
+        expect(user2.firstName).to.equal('Matt');
+        expect(user2.country).to.equal('US');
         done();
       });
     });

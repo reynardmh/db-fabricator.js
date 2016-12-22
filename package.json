@@ -1,6 +1,6 @@
 {
   "name": "db-fabricator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Conveniently populate your database.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,10 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "mysql": "^2.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reynardmh/db-fabricator.js"
   },
   "devDependencies": {
     "@types/bluebird": "^3.0.36",
