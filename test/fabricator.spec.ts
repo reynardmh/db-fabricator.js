@@ -47,6 +47,7 @@ describe('fabricator', () => {
   let DB = new MemoryDB();
   before(() => {
     Fabricator.setAdaptor(new MemoryDBAdaptor(DB));
+    Fabricator.clearTemplate();
   });
 
   describe('with non async function attribute', () => {

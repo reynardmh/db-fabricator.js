@@ -21,6 +21,9 @@ export class MySQLAdaptor implements DataStoreAdaptor {
     return new Promise<any>((resolve, reject): any => {
       let sql = `INSERT INTO ${tableName} (${ columns.join(',') }) VALUES (${ values.map(v => '?').join(',') })`;
       this.conn.query(sql, values, (err: Error, res: any) => {
+        if (err) {
+          throw(err);
+        }
         if (res.affectedRows > 0 && res.insertId > 0) {
           resolve(Object.assign({}, finalAttr, { id: res.insertId }));
         } else {

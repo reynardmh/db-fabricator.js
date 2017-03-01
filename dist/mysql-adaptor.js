@@ -1,6 +1,7 @@
 "use strict";
-const mysql = require('mysql');
-const Promise = require('bluebird');
+Object.defineProperty(exports, "__esModule", { value: true });
+const mysql = require("mysql");
+const Promise = require("bluebird");
 class MySQLAdaptor {
     constructor(args) {
         if (args.conn) {
@@ -20,6 +21,9 @@ class MySQLAdaptor {
         return new Promise((resolve, reject) => {
             let sql = `INSERT INTO ${tableName} (${columns.join(',')}) VALUES (${values.map(v => '?').join(',')})`;
             this.conn.query(sql, values, (err, res) => {
+                if (err) {
+                    throw (err);
+                }
                 if (res.affectedRows > 0 && res.insertId > 0) {
                     resolve(Object.assign({}, finalAttr, { id: res.insertId }));
                 }

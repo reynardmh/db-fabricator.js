@@ -15,6 +15,7 @@ let conn = mysql.createConnection(dbConfig);
 describe('MySQLAdaptor', () => {
   before((done) => {
     Fabricator.setAdaptor(new MySQLAdaptor({ conn: conn }));
+    Fabricator.clearTemplate();
 
     Fabricator.template({
       name: 'organization',

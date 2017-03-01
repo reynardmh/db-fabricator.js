@@ -1,4 +1,3 @@
-/// <reference types="chai" />
 import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
     name: string;

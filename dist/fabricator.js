@@ -1,5 +1,6 @@
 "use strict";
-const Promise = require('bluebird');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Promise = require("bluebird");
 class Fabricator {
     static template(args) {
         if (this._data[args.name] == undefined) {

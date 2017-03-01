@@ -124,6 +124,12 @@ export interface DataStoreAdaptor {
 }
 ```
 
+## Build
+
+```
+$ tsc
+```
+
 ## Running Test
 
 Install ts-node to run the test without compiling to js first.
@@ -132,16 +138,22 @@ Install ts-node to run the test without compiling to js first.
 $ npm install -g ts-node
 ```
 
+Run all tests
+
+```
+$ mocha --compilers ts:ts-node/register test/*
+```
+
 Run the main test
 
 ```
-$ mocha --compilers ts:ts-node/register,tsx:ts-node/register test/fabricator.spec.ts
+$ mocha --compilers ts:ts-node/register test/fabricator.spec.ts
 ```
 
 Run the mysql-adaptor test
 
 ```
-$ mocha --compilers ts:ts-node/register,tsx:ts-node/register test/fabricator-mysql.spec.ts
+$ mocha --compilers ts:ts-node/register test/fabricator-mysql.spec.ts
 ```
 
 You have to have a mysql instance running and a user that can create/drop database.

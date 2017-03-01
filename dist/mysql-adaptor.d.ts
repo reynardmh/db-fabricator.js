@@ -1,4 +1,3 @@
-/// <reference types="chai" />
 /// <reference types="bluebird" />
 import * as mysql from 'mysql';
 import { DataStoreAdaptor } from './data-store-adaptor';
