@@ -1,3 +1,5 @@
+/// <reference types="bluebird" />
+import * as Promise from 'bluebird';
 import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
     name: string;
@@ -14,7 +16,7 @@ declare class Fabricator {
     static template(args: FabricatorTemplateArg): void;
     static setAdaptor(adaptor: DataStoreAdaptor): void;
     static _dataToFabricate(name: string): DataToFabricate;
-    static fabricate(name: string, customAttr?: Object): any;
+    static fabricate(name: string, customAttr?: Object): Promise<any>;
     static clearTemplate(): void;
 }
 export { Fabricator, DataStoreAdaptor };

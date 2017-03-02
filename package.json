@@ -1,6 +1,6 @@
 {
   "name": "db-fabricator",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Conveniently populate your database.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

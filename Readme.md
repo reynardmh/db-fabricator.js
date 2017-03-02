@@ -43,7 +43,7 @@ Fabricator.template({
   name: 'department',
   attr: {
     name: 'IT',
-    organizationId: () => Fabricator.fabricate('organization')
+    organizationId: () => Fabricator.fabricate('organization').then(org => org.id)
   }
 });
 Fabricator.template({
@@ -52,7 +52,7 @@ Fabricator.template({
     firstName: 'Bob',
     lastName: 'Smith',
     username: (obj) => `${obj.firstName}.${obj.lastName}`,
-    departmentId: () => Fabricator.fabricate('department')
+    departmentId: () => Fabricator.fabricate('department').then(dept => dept.id)
   }
 });
 ```

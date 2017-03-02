@@ -27,7 +27,7 @@ describe('MySQLAdaptor', () => {
       name: 'department',
       attr: {
         name: 'IT',
-        organizationId: () => Fabricator.fabricate('organization')
+        organizationId: () => Fabricator.fabricate('organization').then(o => o.id)
       }
     });
     Fabricator.template({
@@ -36,7 +36,7 @@ describe('MySQLAdaptor', () => {
         firstName: 'Bob',
         lastName: 'Smith',
         username: (obj) => `${obj.firstName}.${obj.lastName}`,
-        departmentId: () => Fabricator.fabricate('department')
+        departmentId: () => Fabricator.fabricate('department').then(d => d.id)
       }
     });
 
