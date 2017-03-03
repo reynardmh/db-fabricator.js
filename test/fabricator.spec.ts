@@ -161,7 +161,7 @@ describe('fabricator', () => {
     it('create using promise as attribute', function(done) {
       let orgPromise = Fabricator.fabricate('organization');
       let deptPromise = Fabricator.fabricate('department', {
-        organizationId: orgPromise.then(o => o.id)
+        organizationId: Fabricator.getId(orgPromise)
       });
       Promise.all([orgPromise, deptPromise]).spread((org: any, dept: any) => {
         expect(dept.organizationId).to.equal(org.id);

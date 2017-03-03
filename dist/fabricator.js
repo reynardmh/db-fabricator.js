@@ -71,6 +71,12 @@ class Fabricator {
     static fabGetId(name, customAttr) {
         return Fabricator.fabricate(name, customAttr).then(obj => obj.id);
     }
+    /**
+     * helper to get the id from a fabricated object promise
+     */
+    static getId(promise) {
+        return promise.then(o => o.id);
+    }
     static clearTemplate() {
         this._data = {};
     }
