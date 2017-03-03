@@ -25,10 +25,10 @@ class MySQLAdaptor {
                     throw (err);
                 }
                 if (res.affectedRows > 0 && res.insertId > 0) {
-                    resolve(Object.assign({}, finalAttr, { id: res.insertId }));
+                    resolve(Object.assign({ id: res.insertId }, finalAttr));
                 }
                 else {
-                    reject(res);
+                    reject(Object.assign({ id: null }, finalAttr));
                 }
             });
         });

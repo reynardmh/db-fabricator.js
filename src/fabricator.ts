@@ -73,6 +73,18 @@ class Fabricator {
     });
   }
 
+  /**
+   * Helper function to fabricate and return the id of the fabricated object
+   * So instead of:
+   *   Fabricator.fabricate('organization').then(o => o.id)
+   *
+   * You can do:
+   *   Fabricator.fabGetId('organization')
+   */
+  static fabGetId(name: string, customAttr?: Object): Promise<any> {
+    return Fabricator.fabricate(name, customAttr).then(obj => obj.id);
+  }
+
   static clearTemplate(): void {
     this._data = {};
   }

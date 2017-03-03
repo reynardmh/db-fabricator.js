@@ -17,6 +17,15 @@ declare class Fabricator {
     static setAdaptor(adaptor: DataStoreAdaptor): void;
     static _dataToFabricate(name: string): DataToFabricate;
     static fabricate(name: string, customAttr?: Object): Promise<any>;
+    /**
+     * Helper function to fabricate and return the id of the fabricated object
+     * So instead of:
+     *   Fabricator.fabricate('organization').then(o => o.id)
+     *
+     * You can do:
+     *   Fabricator.fabGetId('organization')
+     */
+    static fabGetId(name: string, customAttr?: Object): Promise<any>;
     static clearTemplate(): void;
 }
 export { Fabricator, DataStoreAdaptor };

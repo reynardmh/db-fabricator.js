@@ -60,6 +60,17 @@ class Fabricator {
             return this._dataStoreAdaptor.createData(tableName, finalAttr);
         });
     }
+    /**
+     * Helper function to fabricate and return the id of the fabricated object
+     * So instead of:
+     *   Fabricator.fabricate('organization').then(o => o.id)
+     *
+     * You can do:
+     *   Fabricator.fabGetId('organization')
+     */
+    static fabGetId(name, customAttr) {
+        return Fabricator.fabricate(name, customAttr).then(obj => obj.id);
+    }
     static clearTemplate() {
         this._data = {};
     }

@@ -104,7 +104,7 @@ describe('fabricator', () => {
         name: 'department',
         attr: {
           name: 'IT',
-          organizationId: () => Fabricator.fabricate('organization').then(o => o.id)
+          organizationId: () => Fabricator.fabGetId('organization')
         }
       });
       Fabricator.template({
@@ -113,7 +113,7 @@ describe('fabricator', () => {
           firstName: 'Bob',
           lastName: 'Smith',
           username: (obj) => `${obj.firstName}.${obj.lastName}`,
-          departmentId: () => Fabricator.fabricate('department').then(d => d.id)
+          departmentId: () => Fabricator.fabGetId('department')
         }
       });
       Fabricator.template({
