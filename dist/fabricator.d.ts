@@ -29,7 +29,7 @@ declare class Fabricator {
     /**
      * helper to get the id from a fabricated object promise
      */
-    static getId(promise: Promise<any>): Promise<any>;
+    static getId(promise: any): Promise<any>;
     static clearTemplate(): void;
 }
 export { Fabricator, DataStoreAdaptor };

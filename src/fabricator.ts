@@ -88,8 +88,8 @@ class Fabricator {
   /**
    * helper to get the id from a fabricated object promise
    */
-  static getId(promise: Promise<any>): Promise<any> {
-    return promise.then(o => o.id);
+  static getId(promise: any): Promise<any> {
+    return Promise.resolve(promise).then(o => o.id);
   }
 
   static clearTemplate(): void {

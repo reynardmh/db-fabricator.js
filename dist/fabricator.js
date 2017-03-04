@@ -75,7 +75,7 @@ class Fabricator {
      * helper to get the id from a fabricated object promise
      */
     static getId(promise) {
-        return promise.then(o => o.id);
+        return Promise.resolve(promise).then(o => o.id);
     }
     static clearTemplate() {
         this._data = {};
