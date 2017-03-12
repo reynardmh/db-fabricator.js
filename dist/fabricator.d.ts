@@ -1,3 +1,5 @@
+/// <reference types="bluebird" />
+import * as Promise from 'bluebird';
 import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
     name: string;
@@ -14,7 +16,20 @@ declare class Fabricator {
     static template(args: FabricatorTemplateArg): void;
     static setAdaptor(adaptor: DataStoreAdaptor): void;
     static _dataToFabricate(name: string): DataToFabricate;
-    static fabricate(name: string, customAttr?: Object): any;
+    static fabricate(name: string, customAttr?: Object): Promise<any>;
+    /**
+     * Helper function to fabricate and return the id of the fabricated object
+     * So instead of:
+     *   Fabricator.fabricate('organization').then(o => o.id)
+     *
+     * You can do:
+     *   Fabricator.fabGetId('organization')
+     */
+    static fabGetId(name: string, customAttr?: Object): Promise<any>;
+    /**
+     * helper to get the id from a fabricated object promise
+     */
+    static getId(promise: any): Promise<any>;
     static clearTemplate(): void;
 }
 export { Fabricator, DataStoreAdaptor };

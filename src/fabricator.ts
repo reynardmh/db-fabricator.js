@@ -49,39 +49,47 @@ class Fabricator {
     }
   }
 
-  static fabricate(name: string, customAttr?: Object): any {
+  static fabricate(name: string, customAttr?: Object): Promise<any> {
     customAttr = customAttr || {};
     let dtf = this._dataToFabricate(name);
     let { tableName: tableName, attr: templateAttr } = dtf;
     let finalAttr = Object.assign({}, templateAttr, customAttr);
     let columns = Object.keys(finalAttr);
-    let asyncTaskKeys: any[] = [];
+    let promises: Promise<any>[] = [];
     columns.forEach((col) => {
-      if (typeof finalAttr[col] === 'function') {
-        asyncTaskKeys.push(col);
+      let val = Promise.resolve(typeof finalAttr[col] === 'function' ? finalAttr[col](finalAttr) : finalAttr[col]);
+      if (val.isFulfilled()) {
+        val = val.value();
+      } else {
+        promises.push(val);
       }
+      finalAttr[col] = val;
     });
-    if (asyncTaskKeys.length > 0) {
-      let processAsyncTasks = (): Promise<any> => {
-        let col = asyncTaskKeys.shift();
-        let val = finalAttr[col](finalAttr);
-        if (val instanceof Promise) {
-          return val.then((result) => {
-            finalAttr[col] = result.id;
-            return asyncTaskKeys.length > 0 ? processAsyncTasks() : result;
-          });
-        } else {
-          finalAttr[col] = val;
-          let promise = new Promise<any>((resolve, reject) => resolve(val));
-          return asyncTaskKeys.length > 0 ? processAsyncTasks() : promise;
-        }
-      };
-      return processAsyncTasks().then((o) => {
-        return this._dataStoreAdaptor.createData(tableName, finalAttr);
+    return Promise.all(promises).then(() => {
+      columns.forEach((col) => {
+        finalAttr[col] = Promise.resolve(finalAttr[col]).value();
       });
-    } else {
       return this._dataStoreAdaptor.createData(tableName, finalAttr);
-    }
+    });
+  }
+
+  /**
+   * Helper function to fabricate and return the id of the fabricated object
+   * So instead of:
+   *   Fabricator.fabricate('organization').then(o => o.id)
+   *
+   * You can do:
+   *   Fabricator.fabGetId('organization')
+   */
+  static fabGetId(name: string, customAttr?: Object): Promise<any> {
+    return Fabricator.fabricate(name, customAttr).then(obj => obj.id);
+  }
+
+  /**
+   * helper to get the id from a fabricated object promise
+   */
+  static getId(promise: any): Promise<any> {
+    return Promise.resolve(promise).then(o => o.id);
   }
 
   static clearTemplate(): void {

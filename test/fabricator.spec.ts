@@ -47,11 +47,11 @@ describe('fabricator', () => {
   let DB = new MemoryDB();
   before(() => {
     Fabricator.setAdaptor(new MemoryDBAdaptor(DB));
-    Fabricator.clearTemplate();
   });
 
-  describe('with non async function attribute', () => {
+  describe('with non async function attribute', function() {
     before(() => {
+      Fabricator.clearTemplate();
       Fabricator.template({
         name: 'user',
         attr: {
@@ -61,11 +61,8 @@ describe('fabricator', () => {
         }
       });
     });
-    after(() => {
-      Fabricator.clearTemplate();
-    });
-    
-    it('creates object with composed attribute', (done) => {
+
+    it('creates object with composed attribute', function(done) {
       Fabricator.fabricate('user')
       .then((user) => {
         expect(user.firstName).to.equal('Bob');
@@ -74,7 +71,7 @@ describe('fabricator', () => {
       });
     });
     
-    it('creates object with overriden attributes', (done) => {
+    it('creates object with overriden attributes', function(done) {
       Fabricator.fabricate('user', { firstName: 'Jon' })
       .then((user) => {
         expect(user.firstName).to.equal('Jon');
@@ -83,7 +80,7 @@ describe('fabricator', () => {
       });
     });
     
-    it('creates object with overidden function attribute', (done) => {
+    it('creates object with overidden function attribute', function(done) {
       Fabricator.fabricate('user', { firstName: 'Jon', username: 'jon123' })
       .then((user) => {
         expect(user.firstName).to.equal('Jon');
@@ -96,6 +93,7 @@ describe('fabricator', () => {
 
   describe('with nested async function attributes', () => {
     before(() => {
+      Fabricator.clearTemplate();
       Fabricator.template({
         name: 'organization',
         attr: {
@@ -106,7 +104,7 @@ describe('fabricator', () => {
         name: 'department',
         attr: {
           name: 'IT',
-          organizationId: () => Fabricator.fabricate('organization')
+          organizationId: () => Fabricator.fabGetId('organization')
         }
       });
       Fabricator.template({
@@ -115,7 +113,7 @@ describe('fabricator', () => {
           firstName: 'Bob',
           lastName: 'Smith',
           username: (obj) => `${obj.firstName}.${obj.lastName}`,
-          departmentId: () => Fabricator.fabricate('department')
+          departmentId: () => Fabricator.fabGetId('department')
         }
       });
       Fabricator.template({
@@ -133,11 +131,8 @@ describe('fabricator', () => {
         }
       });
     });
-    after(() => {
-      Fabricator.clearTemplate();
-    });
 
-    it('creates object with composed attribute', (done) => {
+    it('creates object with composed attribute', function(done) {
       Fabricator.fabricate('user')
       .then((user) => {
         expect(user.username).to.equal('Bob.Smith');
@@ -149,7 +144,7 @@ describe('fabricator', () => {
       });
     });
 
-    it('create using nested templates', (done) => {
+    it('create using nested templates', function(done) {
       Promise.all([
           Fabricator.fabricate('user-fulltime', { firstName: 'Tom' }),
           Fabricator.fabricate('user-fulltime-US', { firstName: 'Matt' })
@@ -159,6 +154,17 @@ describe('fabricator', () => {
         expect(user1.firstName).to.equal('Tom');
         expect(user2.firstName).to.equal('Matt');
         expect(user2.country).to.equal('US');
+        done();
+      });
+    });
+
+    it('create using promise as attribute', function(done) {
+      let orgPromise = Fabricator.fabricate('organization');
+      let deptPromise = Fabricator.fabricate('department', {
+        organizationId: Fabricator.getId(orgPromise)
+      });
+      Promise.all([orgPromise, deptPromise]).spread((org: any, dept: any) => {
+        expect(dept.organizationId).to.equal(org.id);
         done();
       });
     });

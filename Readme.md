@@ -43,7 +43,7 @@ Fabricator.template({
   name: 'department',
   attr: {
     name: 'IT',
-    organizationId: () => Fabricator.fabricate('organization')
+    organizationId: () => Fabricator.fabricate('organization').then(org => org.id)
   }
 });
 Fabricator.template({
@@ -52,13 +52,13 @@ Fabricator.template({
     firstName: 'Bob',
     lastName: 'Smith',
     username: (obj) => `${obj.firstName}.${obj.lastName}`,
-    departmentId: () => Fabricator.fabricate('department')
+    departmentId: () => Fabricator.fabricate('department').then(dept => dept.id)
   }
 });
 ```
 
 You can define template from another template by specifying `from` property
-with the base template name.
+with another template name.
 
 ```typescript
 Fabricator.template({
@@ -97,24 +97,30 @@ Fabricator.fabricate('user-student-with-email', { firstName: 'Dan' });
 If you want to use the same department/organization for some users:
 
 ```typescript
-Fabricator.fabricate('organization')
-.then((org) => {
-  Fabricator.fabricate('department', { name: 'IT', organizationId: org.id })
-  .then((dept) => {
-    Fabricator.fabricate('user', { firstName: 'Bob', departmentId: dept.id });
-    Fabricator.fabricate('user', { firstName: 'Jane', departmentId: dept.id });
-  })
-  Fabricator.fabricate('department', { name: 'Marketing', organizationId: org.id })
-  .then((dept) => {
-    Fabricator.fabricate('user', { firstName: 'Jon', departmentId: dept.id });
-    Fabricator.fabricate('user', { firstName: 'Mary', departmentId: dept.id });
-  })
-});
+let fabId = Fabricator.getId;
+let org            = Fabricator.fabricate('organization');
+let dept_it        = Fabricator.fabricate('department', { name: 'IT',        organizationId: fabId(org) });
+let dept_marketing = Fabricator.fabricate('department', { name: 'Marketing', organizationId: fabId(org) });
+let user_bob       = Fabricator.fabricate('user', { firstName: 'Bob',  departmentId: fabId(dept_it) });
+let user_jane      = Fabricator.fabricate('user', { firstName: 'Jane', departmentId: fabId(dept_it) });
+let user_jon       = Fabricator.fabricate('user', { firstName: 'Jon',  departmentId: fabId(dept_marketing) });
+let user_mary      = Fabricator.fabricate('user', { firstName: 'Mary', departmentId: fabId(dept_marketing) });
+```
+
+`Fabricator.getId` is a helper function which will return the id of the resolved promise. It can be passed a promise or
+just the object from which you want to get the id.
+
+```
+// In the above example
+fabId(org)
+
+// is the same as
+org.then(o => o.id)
 ```
 
 ## Extensible
 
-Currently Fabricator.js supports MySQL data store, but you can create an adaptor for any database.
+Currently db-fabricator only supports MySQL data store, but you can create an adaptor for any database.
 Just implement a class that implements the `DataStoreAdaptor` interface. For an example, see the
 `MySQLAdaptor` implementation.
 
