@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 2.0.1 - 2017-03-12
+
+Allow aliasing the fabricate method to make it less verbose. 
+
+```
+let fabricate = Fabricator.fabricate; 
+fabricate('something', { foo: 'bar });
+```
+
 ## Version 2.0 - 2017-03-12
 
 Major (breaking) change:

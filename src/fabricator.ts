@@ -16,8 +16,8 @@ class Fabricator {
   static _data: Object = {};
   static _dataStoreAdaptor: DataStoreAdaptor;
   static template(args: FabricatorTemplateArg): void {
-    if (this._data[args.name] == undefined) {
-      this._data[args.name] = {
+    if (Fabricator._data[args.name] == undefined) {
+      Fabricator._data[args.name] = {
         from: args.from,
         attr: args.attr
       };
@@ -27,23 +27,23 @@ class Fabricator {
   }
 
   static setAdaptor(adaptor: DataStoreAdaptor): void {
-    this._dataStoreAdaptor = adaptor;
+    Fabricator._dataStoreAdaptor = adaptor;
   }
 
   static _dataToFabricate(name: string): DataToFabricate {
-    if (this._data[name] === undefined) {
-      throw Error(`No Fabricator defined for ${this._data[name]}`)
+    if (Fabricator._data[name] === undefined) {
+      throw Error(`No Fabricator defined for ${Fabricator._data[name]}`)
     } else {
-      if (this._data[name].from === undefined) {
+      if (Fabricator._data[name].from === undefined) {
         return {
           tableName: name,
-          attr: Object.assign({}, this._data[name].attr)
+          attr: Object.assign({}, Fabricator._data[name].attr)
         };
       } else {
-        let templateData = this._dataToFabricate(this._data[name].from);
+        let templateData = Fabricator._dataToFabricate(Fabricator._data[name].from);
         return {
           tableName: templateData.tableName,
-          attr: Object.assign({}, templateData.attr, this._data[name].attr)
+          attr: Object.assign({}, templateData.attr, Fabricator._data[name].attr)
         };
       }
     }
@@ -51,7 +51,7 @@ class Fabricator {
 
   static fabricate(name: string, customAttr?: Object): Promise<any> {
     customAttr = customAttr || {};
-    let dtf = this._dataToFabricate(name);
+    let dtf = Fabricator._dataToFabricate(name);
     let { tableName: tableName, attr: templateAttr } = dtf;
     let finalAttr = Object.assign({}, templateAttr, customAttr);
     let columns = Object.keys(finalAttr);
@@ -69,7 +69,7 @@ class Fabricator {
       columns.forEach((col) => {
         finalAttr[col] = Promise.resolve(finalAttr[col]).value();
       });
-      return this._dataStoreAdaptor.createData(tableName, finalAttr);
+      return Fabricator._dataStoreAdaptor.createData(tableName, finalAttr);
     });
   }
 
@@ -93,7 +93,7 @@ class Fabricator {
   }
 
   static clearTemplate(): void {
-    this._data = {};
+    Fabricator._data = {};
   }
 }
 
