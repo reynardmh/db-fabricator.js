@@ -4,7 +4,8 @@ import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
   name: string,
   from?: string,
-  attr: Object
+  attr?: Object,
+  afterCreate?: Function
 }
 
 export interface DataToFabricate {
@@ -19,7 +20,8 @@ class Fabricator {
     if (Fabricator._data[args.name] == undefined) {
       Fabricator._data[args.name] = {
         from: args.from,
-        attr: args.attr
+        attr: args.attr,
+        afterCreate: args.afterCreate
       };
     } else {
       throw Error(`Fabricator for ${args.name} has already been defined.`);
@@ -51,8 +53,7 @@ class Fabricator {
 
   static fabricate(name: string, customAttr?: Object): Promise<any> {
     customAttr = customAttr || {};
-    let dtf = Fabricator._dataToFabricate(name);
-    let { tableName: tableName, attr: templateAttr } = dtf;
+    let { tableName: tableName, attr: templateAttr } = Fabricator._dataToFabricate(name);
     let finalAttr = Object.assign({}, templateAttr, customAttr);
     let columns = Object.keys(finalAttr);
     let promises: Promise<any>[] = [];
@@ -69,7 +70,14 @@ class Fabricator {
       columns.forEach((col) => {
         finalAttr[col] = Promise.resolve(finalAttr[col]).value();
       });
-      return Fabricator._dataStoreAdaptor.createData(tableName, finalAttr);
+      return Fabricator._dataStoreAdaptor.createData(tableName, finalAttr).then(obj => {
+        let afterCreate = Fabricator._data[name].afterCreate;
+        if (afterCreate) {
+          return afterCreate(obj);
+        } else {
+          return obj;
+        }
+      });
     });
   }
 

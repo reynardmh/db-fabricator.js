@@ -1,6 +1,6 @@
 {
   "name": "db-fabricator",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Conveniently populate your database.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,8 @@
     "@types/mocha": "^2.2.33",
     "@types/mysql": "^0.0.31",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "ts-node": "^2.1.2",
+    "typescript": "^2.2.2"
   }
 }

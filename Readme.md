@@ -1,6 +1,6 @@
 # DB Fabricator
 
-Convenient way to populate your database, mainly for setting up e2e testing data.
+Convenient way to populate your database, mainly for setting up e2e/integration testing data.
 
 ## Install
 
@@ -56,6 +56,8 @@ Fabricator.template({
   }
 });
 ```
+
+### Define template from another template
 
 You can define template from another template by specifying `from` property
 with another template name.
@@ -118,6 +120,30 @@ fabId(org)
 org.then(o => o.id)
 ```
 
+### After Create hook
+
+```typescript
+Fabricator.template({
+  name: 'organization',
+  attr: {
+    name: 'Fabricator Inc'
+  },
+  afterCreate: (org) => {
+    let promises: any[] = [];
+    promises.push(Fabricator.fabricate('department', { organizationId: org.id }));
+    return Promise.all(promises).then((departments) => {
+      org.departments = departments;
+      return org;
+    });
+  }
+});
+
+Fabricator.fabricate('organization').then(org => {
+  expect(org.departments.length).to.equal(1);
+  expect(org.departments[0].organizationId).to.equal(org.id);
+});
+```
+
 ## Extensible
 
 Currently db-fabricator only supports MySQL data store, but you can create an adaptor for any database.
@@ -130,13 +156,15 @@ export interface DataStoreAdaptor {
 }
 ```
 
-## Build
+## Contributing Guide
+
+### Build
 
 ```
 $ tsc
 ```
 
-## Running Test
+### Running Test
 
 Install ts-node to run the test without compiling to js first.
 

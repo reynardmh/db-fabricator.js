@@ -4,7 +4,8 @@ import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
     name: string;
     from?: string;
-    attr: Object;
+    attr?: Object;
+    afterCreate?: Function;
 }
 export interface DataToFabricate {
     tableName: string;

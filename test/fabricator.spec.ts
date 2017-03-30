@@ -170,5 +170,39 @@ describe('fabricator', () => {
     });
 
   });
+
+  describe('with after create hook', () => {
+    before(() => {
+      Fabricator.clearTemplate();
+      Fabricator.template({
+        name: 'department',
+        attr: {
+          name: 'IT',
+          organizationId: () => Fabricator.fabGetId('organization')
+        }
+      });
+      Fabricator.template({
+        name: 'organization',
+        attr: {
+          name: 'Fabricator Inc'
+        },
+        afterCreate: (org) => {
+          let promises: any[] = [];
+          promises.push(Fabricator.fabricate('department', { organizationId: org.id }));
+          return Promise.all(promises).then((departments) => {
+            org.departments = departments;
+            return org;
+          });
+        }
+      });
+    });
+
+    it('create org.departments with after create hook', function() {
+      Fabricator.fabricate('organization').then(org => {
+        expect(org.departments.length).to.equal(1);
+        expect(org.departments[0].organizationId).to.equal(org.id);
+      });
+    });
+  });
 });
 
