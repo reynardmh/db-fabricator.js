@@ -3,11 +3,16 @@
 Convenient way to populate your database, mainly for setting up e2e/integration testing data.
 
 ## Install
-
+Install this package:
 ```
 $ npm install db-fabricator
 ```
-
+Then **only one** of the following:
+```
+$ npm install mysql
+OR
+$ npm install pg
+```
 ## Usage
 
 ### Setup

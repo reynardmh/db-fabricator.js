@@ -1,6 +1,6 @@
 {
   "name": "db-fabricator",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Conveniently populate your database.",
   "scripts": {
     "build": "tsc",
