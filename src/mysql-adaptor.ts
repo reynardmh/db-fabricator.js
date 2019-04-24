@@ -1,6 +1,5 @@
 import * as mysql from 'mysql';
 import { DataStoreAdaptor } from './data-store-adaptor';
-import * as Promise from 'bluebird';
 
 export class MySQLAdaptor implements DataStoreAdaptor {
   public conn: mysql.IConnection;

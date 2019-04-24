@@ -1,6 +1,5 @@
 import { Fabricator } from '../src/fabricator';
 import { DataStoreAdaptor } from '../src/data-store-adaptor';
-import * as Promise from 'bluebird';
 import { expect } from 'chai';
 
 class IdCounter {
@@ -70,7 +69,7 @@ describe('fabricator', () => {
         done();
       });
     });
-    
+
     it('creates object with overriden attributes', function(done) {
       Fabricator.fabricate('user', { firstName: 'Jon' })
       .then((user) => {
@@ -79,7 +78,7 @@ describe('fabricator', () => {
         done();
       });
     });
-    
+
     it('creates object with overidden function attribute', function(done) {
       Fabricator.fabricate('user', { firstName: 'Jon', username: 'jon123' })
       .then((user) => {
@@ -148,7 +147,7 @@ describe('fabricator', () => {
       Promise.all([
           Fabricator.fabricate('user-fulltime', { firstName: 'Tom' }),
           Fabricator.fabricate('user-fulltime-US', { firstName: 'Matt' })
-      ]).spread((user1: any, user2: any) => {
+      ]).then(([user1, user2]) => {
         expect(user1.type).to.equal('fulltime');
         expect(user2.type).to.equal('fulltime');
         expect(user1.firstName).to.equal('Tom');
@@ -163,7 +162,7 @@ describe('fabricator', () => {
       let deptPromise = Fabricator.fabricate('department', {
         organizationId: Fabricator.getId(orgPromise)
       });
-      Promise.all([orgPromise, deptPromise]).spread((org: any, dept: any) => {
+      Promise.all([orgPromise, deptPromise]).then(([org, dept]) => {
         expect(dept.organizationId).to.equal(org.id);
         done();
       });
@@ -205,4 +204,3 @@ describe('fabricator', () => {
     });
   });
 });
-

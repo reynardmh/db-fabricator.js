@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = require("mysql");
-const Promise = require("bluebird");
 class MySQLAdaptor {
     constructor(args) {
         if (args.conn) {
