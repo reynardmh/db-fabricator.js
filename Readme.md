@@ -146,7 +146,7 @@ Fabricator.fabricate('organization').then(org => {
 
 ## Extensible
 
-Currently db-fabricator only supports MySQL data store, but you can create an adaptor for any database.
+Currently db-fabricator only supports MySQL and Postgres data store, but you can create an adaptor for any database.
 Just implement a class that implements the `DataStoreAdaptor` interface. For an example, see the
 `MySQLAdaptor` implementation.
 
@@ -161,36 +161,34 @@ export interface DataStoreAdaptor {
 ### Build
 
 ```
-$ tsc
+$ npm run build
 ```
 
 ### Running Test
 
-Install ts-node to run the test without compiling to js first.
-
-```
-$ npm install -g ts-node
-```
-
-Run all tests
-
-```
-$ mocha --compilers ts:ts-node/register test/*
-```
-
 Run the main test
 
 ```
-$ mocha --compilers ts:ts-node/register test/fabricator.spec.ts
+$ npm run test-fabricator
 ```
 
-Run the mysql-adaptor test
+Run the mysql-adaptor test. You have to have a mysql instance running and a user that can create/drop database.
 
 ```
-$ mocha --compilers ts:ts-node/register test/fabricator-mysql.spec.ts
+$ npm run test-adaptor-mysql
 ```
 
-You have to have a mysql instance running and a user that can create/drop database.
+Run the postgres-adaptor test. You have to have a postgres instance running and a user that can create/drop database.
+
+```
+$ npm run test-adaptor-postgres
+```
+
+Run all tests (requires mysql and postgres DB to be setup)
+
+```
+$ npm test
+```
 
 ## License
 
