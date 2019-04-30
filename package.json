@@ -4,10 +4,10 @@
   "description": "Conveniently populate your database.",
   "scripts": {
     "build": "tsc",
-    "test": "mocha --compilers ts:ts-node/register test/*",
-    "test-fabricator": "mocha --compilers ts:ts-node/register test/fabricator.spec.ts",
-    "test-adaptor-mysql": "mocha --compilers ts:ts-node/register test/fabricator-mysql.spec.ts",
-    "test-adaptor-postgres": "mocha --compilers ts:ts-node/register test/fabricator-postgres.spec.ts"
+    "test": "mocha --require ts-node/register test/*",
+    "test-fabricator": "mocha --require ts-node/register test/fabricator.spec.ts",
+    "test-adaptor-mysql": "mocha --require ts-node/register test/fabricator-mysql.spec.ts",
+    "test-adaptor-postgres": "mocha --require ts-node/register test/fabricator-postgres.spec.ts"
   },
   "author": "Reynard Hilman",
   "license": "MIT",
