@@ -15,10 +15,10 @@ $ npm install pg
 ```
 ## Usage
 
-### Setup
-
+### Setup for MySQL
 ```
-import { Fabricator, MySQLAdaptor } from 'db-fabricator';
+import { Fabricator } from 'db-fabricator';
+import { MySQLAdaptor } from 'db-fabricator/mysql-adaptor';
 import * as mysql from 'mysql';
 
 let conn = mysql.createConnection({
@@ -29,6 +29,22 @@ let conn = mysql.createConnection({
 });
 
 Fabricator.setAdaptor(new MySQLAdaptor({conn: conn}));
+```
+
+### Setup for Postgres
+```
+import { Fabricator } from 'db-fabricator';
+import { PostgresAdaptor } from 'db-fabricator/postgres-adaptor';
+import * as pg from 'pg';
+
+let conn = new pg.Client({
+  host: 'localhost',
+  user: 'dev',
+  password: 'pass',
+  database: 'dbname'
+});
+
+Fabricator.setAdaptor(new PostgresAdaptor({conn: conn}));
 ```
 
 ### Defining Template
