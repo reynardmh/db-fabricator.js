@@ -47,6 +47,10 @@ describe('MySQLAdaptor', () => {
     });
   });
 
+  after(() => {
+    conn.end();
+  });
+
   it('creates nested entries in database', (done) => {
     Fabricator.fabricate('user')
     .then((user) => {
