@@ -1,27 +1,30 @@
 {
   "name": "db-fabricator",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Conveniently populate your database.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "mocha --require ts-node/register test/*",
+    "test-fabricator": "mocha --require ts-node/register test/fabricator.spec.ts",
+    "test-adaptor-mysql": "mocha --require ts-node/register test/fabricator-mysql.spec.ts",
+    "test-adaptor-postgres": "mocha --require ts-node/register test/fabricator-postgres.spec.ts"
   },
   "author": "Reynard Hilman",
   "license": "MIT",
-  "dependencies": {
-    "bluebird": "^3.4.6",
-    "mysql": "^2.12.0"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/reynardmh/db-fabricator.js"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.0.36",
     "@types/mocha": "^2.2.33",
     "@types/mysql": "^0.0.31",
+    "@types/pg": "^7.4.14",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "ts-node": "^2.1.2",
+    "mocha": "^6.1.4",
+    "mysql": "^2.12.0",
+    "pg": "^7.8.2",
+    "ts-node": "^8.1.0",
     "typescript": "^2.2.2"
   }
 }

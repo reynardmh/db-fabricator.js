@@ -1,5 +1,3 @@
-/// <reference types="bluebird" />
-import * as Promise from 'bluebird';
 import { DataStoreAdaptor } from './data-store-adaptor';
 export interface FabricatorTemplateArg {
     name: string;

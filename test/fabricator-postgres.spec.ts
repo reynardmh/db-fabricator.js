@@ -1,20 +1,22 @@
-import * as mysql from 'mysql';
+import * as pg from 'pg';
 import { Fabricator } from '../src/fabricator';
-import { MySQLAdaptor } from '../src/mysql-adaptor';
+import { PostgresAdaptor } from '../src/postgres-adaptor';
 import { exec } from 'child_process';
 import { expect } from 'chai';
 
 let dbConfig = {
   host: 'localhost',
+  port: 5432,
   user: 'dev',
   password: 'test',
   database: 'fabricator_test'
 };
-let conn = mysql.createConnection(dbConfig);
 
-describe('MySQLAdaptor', () => {
+const conn = new pg.Client(dbConfig);
+
+describe('PostgresAdaptor', () => {
   before((done) => {
-    Fabricator.setAdaptor(new MySQLAdaptor({ conn: conn }));
+    Fabricator.setAdaptor(new PostgresAdaptor({ conn: conn }));
     Fabricator.clearTemplate();
 
     Fabricator.template({
@@ -40,9 +42,13 @@ describe('MySQLAdaptor', () => {
       }
     });
 
-    let cmd = `mysql -u ${dbConfig.user} --password=${dbConfig.password} < ./test/sql/create-tables.mysql.sql`;
+    let cmd = `PGPASSWORD=${dbConfig.password} psql -U ${dbConfig.user} -h ${dbConfig.host} -p ${dbConfig.port} postgres < ./test/sql/create-tables.postgres.sql`;
     exec(cmd, function(error, stdout, stderr) {
-      if (error) console.log(error);
+      if (error) {
+        throw error;
+        console.log(error);
+      }
+      conn.connect();
       done();
     });
   });
@@ -56,13 +62,13 @@ describe('MySQLAdaptor', () => {
     .then((user) => {
       expect(user.firstName).to.equal('Bob');
       expect(user.username).to.equal('Bob.Smith');
-      conn.query('SELECT * FROM department WHERE id = ?', user.departmentId, (err, res) => {
+      conn.query('SELECT * FROM department WHERE id = $1', [user.departmentId], (err, res) => {
         if (err) console.log(err);
-        let dept = res[0];
+        let dept = res.rows[0];
         expect(dept.name).to.equal('IT');
-        conn.query('SELECT * FROM organization WHERE id = ?', dept.organizationId, (err, res) => {
+        conn.query('SELECT * FROM organization WHERE id = $1', [dept.organizationId], (err, res) => {
           if (err) console.log(err);
-          let org = res[0];
+          let org = res.rows[0];
           expect(org.name).to.equal('Fabricator Inc');
           done();
         });

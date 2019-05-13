@@ -1,11 +1,17 @@
 # Changelog
 
+## Version 2.2.0 - 2019-04-24
+
+* Add PostgresAdaptor.
+* Removes bluebird dependency.
+* Moves DB driver dependencies to devDependencies
+
 ## Version 2.0.1 - 2017-03-12
 
-Allow aliasing the fabricate method to make it less verbose. 
+Allow aliasing the fabricate method to make it less verbose.
 
 ```
-let fabricate = Fabricator.fabricate; 
+let fabricate = Fabricator.fabricate;
 fabricate('something', { foo: 'bar });
 ```
 

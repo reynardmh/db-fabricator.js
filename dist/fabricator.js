@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Promise = require("bluebird");
 class Fabricator {
     static template(args) {
         if (Fabricator._data[args.name] == undefined) {
@@ -42,20 +41,16 @@ class Fabricator {
         let { tableName: tableName, attr: templateAttr } = Fabricator._dataToFabricate(name);
         let finalAttr = Object.assign({}, templateAttr, customAttr);
         let columns = Object.keys(finalAttr);
-        let promises = [];
+        let promiseMap = new Map();
         columns.forEach((col) => {
             let val = Promise.resolve(typeof finalAttr[col] === 'function' ? finalAttr[col](finalAttr) : finalAttr[col]);
-            if (val.isFulfilled()) {
-                val = val.value();
-            }
-            else {
-                promises.push(val);
-            }
-            finalAttr[col] = val;
+            promiseMap.set(col, val);
         });
-        return Promise.all(promises).then(() => {
-            columns.forEach((col) => {
-                finalAttr[col] = Promise.resolve(finalAttr[col]).value();
+        return Promise.all(promiseMap.values()).then((finalValues) => {
+            let counter = 0;
+            promiseMap.forEach((val, key) => {
+                finalAttr[key] = finalValues[counter];
+                ++counter;
             });
             return Fabricator._dataStoreAdaptor.createData(tableName, finalAttr).then(obj => {
                 let afterCreate = Fabricator._data[name].afterCreate;

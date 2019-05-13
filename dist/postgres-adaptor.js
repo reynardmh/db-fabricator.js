@@ -1,30 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mysql = require("mysql");
-class MySQLAdaptor {
+const pg = require("pg");
+class PostgresAdaptor {
     constructor(args) {
         if (args.conn) {
             this.conn = args.conn;
         }
         else if (args.config) {
-            this.conn = mysql.createConnection(args.config);
+            this.conn = new pg.Client(args.config);
             this.conn.connect();
         }
         else {
-            throw new Error('conn or config is required to create new MySQLAdaptor');
+            throw new Error('conn or config is required to create new PostgresAdaptor');
         }
     }
     createData(tableName, finalAttr) {
         let columns = Object.keys(finalAttr);
         let values = columns.map((col) => finalAttr[col]);
         return new Promise((resolve, reject) => {
-            let sql = `INSERT INTO ${tableName} (${columns.join(',')}) VALUES (${values.map(v => '?').join(',')})`;
+            let columnsQuery = columns.map(c => `"${c}"`).join(',');
+            let valuesQuery = values.map((v, ind) => `$${ind + 1}`).join(',');
+            let sql = `INSERT INTO "${tableName}" (${columnsQuery}) VALUES (${valuesQuery}) RETURNING id`;
             this.conn.query(sql, values, (err, res) => {
                 if (err) {
                     throw (err);
                 }
-                if (res.affectedRows > 0 && res.insertId > 0) {
-                    resolve(Object.assign({ id: res.insertId }, finalAttr));
+                const insertId = res.rows[0] && res.rows[0].id;
+                if (res.rowCount > 0 && insertId > 0) {
+                    resolve(Object.assign({ id: insertId }, finalAttr));
                 }
                 else {
                     reject(Object.assign({ id: null }, finalAttr));
@@ -33,5 +36,5 @@ class MySQLAdaptor {
         });
     }
 }
-exports.MySQLAdaptor = MySQLAdaptor;
-//# sourceMappingURL=mysql-adaptor.js.map
+exports.PostgresAdaptor = PostgresAdaptor;
+//# sourceMappingURL=postgres-adaptor.js.map

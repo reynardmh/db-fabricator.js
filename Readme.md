@@ -3,17 +3,22 @@
 Convenient way to populate your database, mainly for setting up e2e/integration testing data.
 
 ## Install
-
+Install this package:
 ```
 $ npm install db-fabricator
 ```
-
+Then **only one** of the following:
+```
+$ npm install mysql
+OR
+$ npm install pg
+```
 ## Usage
 
-### Setup
-
+### Setup for MySQL
 ```
-import { Fabricator, MySQLAdaptor } from 'db-fabricator';
+import { Fabricator } from 'db-fabricator';
+import { MySQLAdaptor } from 'db-fabricator/mysql-adaptor';
 import * as mysql from 'mysql';
 
 let conn = mysql.createConnection({
@@ -24,6 +29,22 @@ let conn = mysql.createConnection({
 });
 
 Fabricator.setAdaptor(new MySQLAdaptor({conn: conn}));
+```
+
+### Setup for Postgres
+```
+import { Fabricator } from 'db-fabricator';
+import { PostgresAdaptor } from 'db-fabricator/postgres-adaptor';
+import * as pg from 'pg';
+
+let conn = new pg.Client({
+  host: 'localhost',
+  user: 'dev',
+  password: 'pass',
+  database: 'dbname'
+});
+
+Fabricator.setAdaptor(new PostgresAdaptor({conn: conn}));
 ```
 
 ### Defining Template
@@ -146,7 +167,7 @@ Fabricator.fabricate('organization').then(org => {
 
 ## Extensible
 
-Currently db-fabricator only supports MySQL data store, but you can create an adaptor for any database.
+Currently db-fabricator only supports MySQL and Postgres data store, but you can create an adaptor for any database.
 Just implement a class that implements the `DataStoreAdaptor` interface. For an example, see the
 `MySQLAdaptor` implementation.
 
@@ -161,36 +182,34 @@ export interface DataStoreAdaptor {
 ### Build
 
 ```
-$ tsc
+$ npm run build
 ```
 
 ### Running Test
 
-Install ts-node to run the test without compiling to js first.
-
-```
-$ npm install -g ts-node
-```
-
-Run all tests
-
-```
-$ mocha --compilers ts:ts-node/register test/*
-```
-
 Run the main test
 
 ```
-$ mocha --compilers ts:ts-node/register test/fabricator.spec.ts
+$ npm run test-fabricator
 ```
 
-Run the mysql-adaptor test
+Run the mysql-adaptor test. You have to have a mysql instance running and a user that can create/drop database.
 
 ```
-$ mocha --compilers ts:ts-node/register test/fabricator-mysql.spec.ts
+$ npm run test-adaptor-mysql
 ```
 
-You have to have a mysql instance running and a user that can create/drop database.
+Run the postgres-adaptor test. You have to have a postgres instance running and a user that can create/drop database.
+
+```
+$ npm run test-adaptor-postgres
+```
+
+Run all tests (requires mysql and postgres DB to be setup)
+
+```
+$ npm test
+```
 
 ## License
 
